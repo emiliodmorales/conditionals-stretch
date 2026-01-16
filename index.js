@@ -1,6 +1,15 @@
-let score = 0;
+const maxMagicNumber = 10;
 
-let magicNumber = Math.floor(Math.random() * 9) + 1;
+let score = 0;
+let attempts = 0;
+
+let magicNumber;
+function newMagicNumber() {
+  magicNumber = Math.floor(Math.random() * (maxMagicNumber - 1)) + 1;
+  console.log("New magic number is " + magicNumber);
+}
+newMagicNumber();
+
 console.log("New magic number is " + magicNumber);
 
 function changeResponse(newText) {
@@ -10,22 +19,26 @@ function changeResponse(newText) {
 addEventListener("submit", (event) => {
   event.preventDefault();
   let answerInput = Number(document.forms["myForm"]["answer"].value);
+  attempts++;
 
   if (Number.isNaN(answerInput)) {
     changeResponse("You must enter a number");
-  } else if (answerInput < 1 || answerInput > 10) {
-    changeResponse("Your number has to be between 1 and 10");
+  } else if (answerInput < 1 || answerInput > maxMagicNumber) {
+    changeResponse(`Your number has to be between 1 and ${maxMagicNumber}`);
   } else if (answerInput < magicNumber) {
-    changeResponse("Sorry your answer was too low");
+    changeResponse(`${answerInput} is too low`);
   } else if (answerInput > magicNumber) {
-    changeResponse("Sorry your answer was too high");
+    changeResponse(`${answerInput} is too high`);
   } else if (answerInput === magicNumber) {
-    magicNumber = Math.floor(Math.random() * 9) + 1;
-    console.log("New magic number is " + magicNumber);
+    newMagicNumber();
 
-    changeResponse("You got it right. A new magic number has been made.");
+    const points = 5 - attempts;
+    score += points;
+    changeResponse(
+      `${answerInput} was the magic number. You got it in ${attempts} attempts. A new magic number has been made.`
+    );
 
-    score++;
+    attempts = 0;
     document.getElementById("score").textContent = `Your score: ${score}`;
   }
 
