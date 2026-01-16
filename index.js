@@ -1,18 +1,33 @@
-const magicNumber = Math.floor(Math.random() * 9) + 1;
+let score = 0;
+
+let magicNumber = Math.floor(Math.random() * 9) + 1;
 console.log("New magic number is " + magicNumber);
 
-let answerInput = Number(prompt("Guess a number between 1 and 10"));
-
-while (answerInput !== magicNumber) {
-  if (Number.isNaN(answerInput)) {
-    alert("You must enter a number");
-  } else if (answerInput < 1 || answerInput > 10) {
-    alert("Your number has to be between 1 and 10");
-  } else if (answerInput < magicNumber) {
-    alert("Sorry your answer was too low");
-  } else if (answerInput > magicNumber) {
-    alert("Sorry your answer was too high");
-  }
-  answerInput = Number(prompt("Guess a number between 1 and 10"));
+function changeResponse(newText) {
+  document.getElementById("response").textContent = newText;
 }
-alert("You got it right");
+
+addEventListener("submit", (event) => {
+  event.preventDefault();
+  let answerInput = Number(document.forms["myForm"]["answer"].value);
+
+  if (Number.isNaN(answerInput)) {
+    changeResponse("You must enter a number");
+  } else if (answerInput < 1 || answerInput > 10) {
+    changeResponse("Your number has to be between 1 and 10");
+  } else if (answerInput < magicNumber) {
+    changeResponse("Sorry your answer was too low");
+  } else if (answerInput > magicNumber) {
+    changeResponse("Sorry your answer was too high");
+  } else if (answerInput === magicNumber) {
+    magicNumber = Math.floor(Math.random() * 9) + 1;
+    console.log("New magic number is " + magicNumber);
+
+    changeResponse("You got it right. A new magic number has been made.");
+
+    score++;
+    document.getElementById("score").textContent = `Your score: ${score}`;
+  }
+
+  document.getElementById("answer").value = "";
+});
